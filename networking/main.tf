@@ -84,17 +84,17 @@ resource "aws_default_route_table" "lvu_private_rt" {
 }
 
 resource "aws_security_group" "lvu-public-sg" {
-  for_each = var.security_groups
-  name        = each.value.name 
+  for_each    = var.security_groups
+  name        = each.value.name
   description = each.value.description
   vpc_id      = aws_vpc.lvu_vpc.id
-  dynamic "ingress"  {
+  dynamic "ingress" {
     for_each = each.value.ingress
     content {
-    from_port   = ingress.value.from
-    to_port     = ingress.value.to
-    protocol    = ingress.value.protocol
-    cidr_blocks = ingress.value.cidr_blocks
+      from_port   = ingress.value.from
+      to_port     = ingress.value.to
+      protocol    = ingress.value.protocol
+      cidr_blocks = ingress.value.cidr_blocks
     }
   }
   egress {
@@ -108,8 +108,8 @@ resource "aws_security_group" "lvu-public-sg" {
 
 
 resource "aws_db_subnet_group" "lvu-subnet_group" {
-  count = var.db_subnet_group == true ? 1 : 0
-  name = "lvu_subnet_group"
+  count      = var.db_subnet_group == true ? 1 : 0
+  name       = "lvu_subnet_group"
   subnet_ids = aws_subnet.lvu_private_subnet.*.id
   tags = {
     "Name" = "lvu_rds"
